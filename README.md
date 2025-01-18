@@ -30,3 +30,36 @@
 - 
 - 
 - 
+
+
+# Models
+- FishingReport
+    - Id
+    - FirstHighTide
+    - SecondHighTide
+    - FirstLowTide
+    - SecondLowTide
+    - DaytimeTemperature
+    - 
+    - Visibility
+    - EventDate
+    - CreatedDate
+    - DeletedDate
+    - UpdatedDate
+- FishSpecies
+    - FishId
+    - Name
+    - ScientificName
+    - Description
+    - CreatedDate
+    - DeletedDate
+    - UpdatedDate
+- (Mapping Table) Catch
+    - FishId
+    - ReportId
+    - UserId
+    - CreatedDate
+    - DeletedDate
+    - UpdatedDate
+- Gear
+- 
