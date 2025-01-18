@@ -5,9 +5,26 @@
 - 
 
 # (TODO) Features
-- 
-- 
-- 
+- Plan a fishing trip
+    - Select a date for the fishing trip
+    - Displays weather forecast and tides for a location selected on a map
+    - Estimates the best times for fishing
+    - Recommends lures, bait, gear to be used for the targetted species
+    - Shows soundings on a map
+- Log a fishing report 
+    - Includes map coordinates, species caught with size/weight, weather conditions, lures used, gear used (rods, reels, leader/main lines used, hooks, jigheads, swimbaits/paddletails), arrival time, departure time, kayak used 
+    - Allows for a joint fishing report with multiple users
+    - Allows for the reports to be private and public
+    - Allows for comments and notes
+- Creates a finalized fishing report on Save (includes the plan and the actual results after the day is done)
+- Gear Inventory
+    - Gear-tracking system where a user manages their fishing equipment.
+    - Include maintenance reminders for rods, reels, or kayaks.
+    - Includes kayak used
+- Analytics dashboard
+    - Displays calendar with fishing performance
+    - Highlights the best fishing times per location
+- Offline catch log tracking
 
 # (COMPLETED) Features
 - 
