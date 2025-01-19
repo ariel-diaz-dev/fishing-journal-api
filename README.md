@@ -7,9 +7,10 @@
 # (TODO) Features
 - Plan a fishing trip
     - Select a date for the fishing trip
-    - Enter estimated time of arrival to the fishing spot
-    - Display if it's incoming or outgoing tide by the time you plan to get there
-    - Displays weather forecast and tides for a location selected on a map
+    - Select a place / area to fish
+    - Displays weather forecast by hour
+    - Displays tide information
+    - Display water temperature
     - Estimates the best times for fishing
     - Recommends lures, bait, gear to be used for the targetted species
     - Shows soundings on a map
