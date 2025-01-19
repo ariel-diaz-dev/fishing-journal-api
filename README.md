@@ -7,6 +7,8 @@
 # (TODO) Features
 - Plan a fishing trip
     - Select a date for the fishing trip
+    - Enter estimated time of arrival to the fishing spot
+    - Display if it's incoming or outgoing tide by the time you plan to get there
     - Displays weather forecast and tides for a location selected on a map
     - Estimates the best times for fishing
     - Recommends lures, bait, gear to be used for the targetted species
@@ -35,19 +37,19 @@
 # Models
 - FishingReport
     - Id
+    - EstimatedArrivalTime
     - FirstHighTide
     - SecondHighTide
     - FirstLowTide
     - SecondLowTide
     - DaytimeTemperature
-    - 
     - Visibility
     - EventDate
     - CreatedDate
     - DeletedDate
     - UpdatedDate
 - FishSpecies
-    - FishId
+    - Id
     - Name
     - ScientificName
     - Description
@@ -55,6 +57,7 @@
     - DeletedDate
     - UpdatedDate
 - (Mapping Table) Catch
+    - Id
     - FishId
     - ReportId
     - UserId
@@ -62,4 +65,36 @@
     - DeletedDate
     - UpdatedDate
 - Gear
-- 
+    - Id
+    - Type
+    - Name
+    - Description
+    - CreatedDate
+    - DeletedDate
+    - UpdatedDate
+
+# User Flows
+### Creating a Fishing Plan
+- Select date 
+- Select fishing spot on the map
+    - UI displays 
+        - Tide information
+        - Sunrise time
+        - Weather Forecast
+- Save plan
+
+
+### Create a Fishing Report
+- From the Fishing Plan UI, user can create a fishing report for that plan.
+    1:1 relationship between plan and fishing report
+- User logs species caught with size/weight and lure that was used for the species
+- User logs gear used (rods, reels, leader/main lines used, hooks, jigheads, swimbaits/paddletails), arrival time, departure time, kayak used
+    - User selects gear from personal inventory
+    - gear types:
+        - vessel
+        - lure type
+        - rod 
+        - reel
+        - leader
+        - main line
+    
