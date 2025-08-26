@@ -1,0 +1,27 @@
+using Domain.Data;
+using Domain.Interfaces;
+using Domain.Repositories;
+using Domain.Services;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace Domain.Extensions;
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddDomainServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        // Configure Entity Framework
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+
+        // Register repositories
+        services.AddScoped<IUserRepository, UserRepository>();
+        
+        // Register services
+        services.AddScoped<IUserService, UserService>();
+
+        return services;
+    }
+}

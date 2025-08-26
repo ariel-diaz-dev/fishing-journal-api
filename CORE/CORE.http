@@ -1,6 +1,0 @@
-@CORE_HostAddress = http://localhost:5167
-
-GET {{CORE_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
