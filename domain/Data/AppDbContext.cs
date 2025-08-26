@@ -7,61 +7,54 @@ public class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    public DbSet<User> Users { get; set; }
+    public DbSet<Account> Accounts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<Account>(entity =>
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
             
-            entity.Property(e => e.AccountId)
-                .IsRequired();
+            entity.Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(255);
             
             entity.Property(e => e.FirstName)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(100);
             
             entity.Property(e => e.LastName)
                 .IsRequired()
-                .HasMaxLength(50);
+                .HasMaxLength(100);
             
-            entity.Property(e => e.PhoneNumber)
-                .IsRequired()
-                .HasMaxLength(20);
-            
-            entity.Property(e => e.UserRole)
-                .IsRequired()
-                .HasConversion<string>();
-            
-            entity.Property(e => e.CreatedAt)
+            entity.Property(e => e.CreatedDate)
                 .IsRequired();
             
-            entity.Property(e => e.UpdatedAt)
+            entity.Property(e => e.UpdatedDate)
                 .IsRequired();
 
-            entity.HasQueryFilter(e => e.DeletedAt == null);
+            entity.HasQueryFilter(e => e.DeletedDate == null);
 
-            entity.HasIndex(e => e.DeletedAt);
-            entity.HasIndex(e => e.CreatedAt);
+            entity.HasIndex(e => e.Email).IsUnique();
+            entity.HasIndex(e => e.DeletedDate);
         });
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var entries = ChangeTracker.Entries<User>()
+        var entries = ChangeTracker.Entries<Account>()
             .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
         foreach (var entry in entries)
         {
             if (entry.State == EntityState.Added)
             {
-                entry.Entity.CreatedAt = DateTime.UtcNow;
+                entry.Entity.CreatedDate = DateTime.UtcNow;
             }
-            entry.Entity.UpdatedAt = DateTime.UtcNow;
+            entry.Entity.UpdatedDate = DateTime.UtcNow;
         }
 
         return await base.SaveChangesAsync(cancellationToken);

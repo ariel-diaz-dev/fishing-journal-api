@@ -17,10 +17,10 @@ public static class ServiceCollectionExtensions
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
         // Register repositories
-        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IAccountRepository, AccountRepository>();
         
         // Register services
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAccountService, AccountService>();
 
         return services;
     }
