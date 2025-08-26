@@ -34,45 +34,107 @@
 - 
 - 
 
-
 # Models
-- FishingReport
-    - Id
-    - EstimatedArrivalTime
-    - FirstHighTide
-    - SecondHighTide
-    - FirstLowTide
-    - SecondLowTide
-    - DaytimeTemperature
-    - Visibility
-    - EventDate
-    - CreatedDate
-    - DeletedDate
-    - UpdatedDate
-- FishSpecies
-    - Id
-    - Name
-    - ScientificName
-    - Description
-    - CreatedDate
-    - DeletedDate
-    - UpdatedDate
-- (Mapping Table) Catch
-    - Id
-    - FishId
-    - ReportId
-    - UserId
-    - CreatedDate
-    - DeletedDate
-    - UpdatedDate
-- Gear
-    - Id
-    - Type
-    - Name
-    - Description
-    - CreatedDate
-    - DeletedDate
-    - UpdatedDate
+- **Account**
+    - Id: `Guid` (Primary Key)
+    - Email: `string` (Required, MaxLength: 255)
+    - FirstName: `string` (Required, MaxLength: 100)
+    - LastName: `string` (Required, MaxLength: 100)
+    - CreatedDate: `DateTime`
+    - DeletedDate: `DateTime?`
+    - UpdatedDate: `DateTime`
+
+- **FishingReport**
+    - Id: `Guid` (Primary Key)
+    - AccountId: `Guid` (Foreign Key)
+    - PlanId: `Guid?` (Foreign Key, nullable for standalone reports)
+    - LocationLatitude: `decimal`
+    - LocationLongitude: `decimal`
+    - LocationName: `string` (MaxLength: 200)
+    - EstimatedArrivalTime: `DateTime?`
+    - ActualArrivalTime: `DateTime?`
+    - ActualDepartureTime: `DateTime?`
+    - FirstHighTide: `DateTime?`
+    - SecondHighTide: `DateTime?`
+    - FirstLowTide: `DateTime?`
+    - SecondLowTide: `DateTime?`
+    - DaytimeTemperature: `decimal?`
+    - WaterTemperature: `decimal?`
+    - Visibility: `string` (MaxLength: 100)
+    - WindSpeed: `decimal?`
+    - WindDirection: `string` (MaxLength: 10)
+    - WeatherConditions: `string` (MaxLength: 500)
+    - Notes: `string` (MaxLength: 2000)
+    - IsPublic: `bool` (Default: false)
+    - EventDate: `DateTime`
+    - CreatedDate: `DateTime`
+    - DeletedDate: `DateTime?`
+    - UpdatedDate: `DateTime`
+
+- **FishSpecies**
+    - Id: `Guid` (Primary Key)
+    - Name: `string` (Required, MaxLength: 100)
+    - ScientificName: `string` (MaxLength: 150)
+    - Family: `string` (MaxLength: 100)
+    - Description: `string` (MaxLength: 1000)
+    - AverageLength: `decimal?`
+    - AverageWeight: `decimal?`
+    - CreatedDate: `DateTime`
+    - DeletedDate: `DateTime?`
+    - UpdatedDate: `DateTime`
+
+- **Catches** (Mapping Table)
+    - Id: `Guid` (Primary Key)
+    - FishSpeciesId: `Guid` (Foreign Key)
+    - FishingReportId: `Guid` (Foreign Key)
+    - AccountId: `Guid` (Foreign Key)
+    - Length: `decimal?`
+    - Weight: `decimal?`
+    - LureUsed: `string` (MaxLength: 200)
+    - TimeOfCatch: `DateTime?`
+    - Released: `bool` (Default: true)
+    - CreatedDate: `DateTime`
+    - DeletedDate: `DateTime?`
+    - UpdatedDate: `DateTime`
+
+- **Gear**
+    - Id: `Guid` (Primary Key)
+    - AccountId: `Guid` (Foreign Key)
+    - Type: `GearType` (enum: Rod, Reel, Line, Lure, Tackle, Vessel)
+    - Name: `string` (Required, MaxLength: 200)
+    - Brand: `string` (MaxLength: 100)
+    - Model: `string` (MaxLength: 100)
+    - Description: `string` (MaxLength: 1000)
+    - PurchaseDate: `DateTime?`
+    - PurchasePrice: `decimal?`
+    - Condition: `string` (MaxLength: 50)
+    - LastMaintenanceDate: `DateTime?`
+    - NextMaintenanceDate: `DateTime?`
+    - IsActive: `bool` (Default: true)
+    - CreatedDate: `DateTime`
+    - DeletedDate: `DateTime?`
+    - UpdatedDate: `DateTime`
+
+- **FishingPlan**
+    - Id: `Guid` (Primary Key)
+    - AccountId: `Guid` (Foreign Key)
+    - LocationLatitude: `decimal`
+    - LocationLongitude: `decimal`
+    - LocationName: `string` (MaxLength: 200)
+    - PlannedDate: `DateTime`
+    - PlannedArrivalTime: `DateTime?`
+    - PlannedDepartureTime: `DateTime?`
+    - TargetSpecies: `string` (MaxLength: 500)
+    - Notes: `string` (MaxLength: 2000)
+    - CreatedDate: `DateTime`
+    - DeletedDate: `DateTime?`
+    - UpdatedDate: `DateTime`
+
+- **ReportGear** (Mapping Table)
+    - Id: `Guid` (Primary Key)
+    - FishingReportId: `Guid` (Foreign Key)
+    - GearId: `Guid` (Foreign Key)
+    - CreatedDate: `DateTime`
 
 # User Flows
 ### Creating a Fishing Plan
