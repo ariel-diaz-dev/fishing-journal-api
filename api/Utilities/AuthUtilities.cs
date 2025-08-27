@@ -3,7 +3,7 @@ namespace api.Utilities;
 /// <summary>
 /// Utility class for authentication and authorization operations
 /// </summary>
-public static class AuthUtilities
+public static class AuthUtils
 {
     /// <summary>
     /// Extracts the AccountId from HttpContext.Items that was set by the RequireAccountJwt attribute
