@@ -1,4 +1,5 @@
 using api.Attributes;
+using api.Utilities;
 using Domain.DTOs.Tackle;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -17,15 +18,11 @@ public class TackleController : ControllerBase
         _tackleService = tackleService;
     }
 
-    private Guid GetAccountIdFromHttpContext()
-    {
-        return (Guid)HttpContext.Items["AccountId"]!;
-    }
 
     [HttpGet]
     public async Task<IActionResult> GetAllTackle(CancellationToken cancellationToken = default)
     {
-        var accountId = GetAccountIdFromHttpContext();
+        var accountId = AuthUtilities.GetAccountIdFromHttpContext(HttpContext);
         var tackle = await _tackleService.GetAllTackleByAccountAsync(accountId, cancellationToken);
         
         var tackleDtos = tackle.Select(t => new TackleDto
@@ -46,7 +43,7 @@ public class TackleController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTackleById(Guid id, CancellationToken cancellationToken = default)
     {
-        var accountId = GetAccountIdFromHttpContext();
+        var accountId = AuthUtilities.GetAccountIdFromHttpContext(HttpContext);
         var tackle = await _tackleService.GetTackleByIdAsync(id, accountId, cancellationToken);
         
         if (tackle == null)
@@ -77,7 +74,7 @@ public class TackleController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var accountId = GetAccountIdFromHttpContext();
+        var accountId = AuthUtilities.GetAccountIdFromHttpContext(HttpContext);
         
         try
         {
@@ -111,7 +108,7 @@ public class TackleController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var accountId = GetAccountIdFromHttpContext();
+        var accountId = AuthUtilities.GetAccountIdFromHttpContext(HttpContext);
         var tackle = await _tackleService.UpdateTackleAsync(id, accountId, updateTackleDto, cancellationToken);
         
         if (tackle == null)
@@ -137,7 +134,7 @@ public class TackleController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTackle(Guid id, CancellationToken cancellationToken = default)
     {
-        var accountId = GetAccountIdFromHttpContext();
+        var accountId = AuthUtilities.GetAccountIdFromHttpContext(HttpContext);
         var result = await _tackleService.DeleteTackleAsync(id, accountId, cancellationToken);
         
         if (!result)
