@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace api.Attributes;
 
-public class RequireAccountAttribute : Attribute, IAuthorizationFilter
+public class RequireAccountJwtAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {

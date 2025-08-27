@@ -7,7 +7,7 @@ namespace api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[RequireAccount]
+[RequireAccountJwt]
 public class TackleController : ControllerBase
 {
     private readonly ITackleService _tackleService;
