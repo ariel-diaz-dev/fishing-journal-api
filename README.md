@@ -44,6 +44,16 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime`
 
+- **Tackle**
+    - Id: `Guid` (Primary Key)
+    - AccountId: `Guid` (Foreign Key)
+    - Type: `Type` (Required, enum: Rod, Reel, Line, Lure, Terminal, Vessel, Other)
+    - Name: `string` (Required, MaxLength: 200)
+    - Description: `string` (MaxLength: 1000)
+    - CreatedDate: `DateTime`
+    - DeletedDate: `DateTime?`
+    - UpdatedDate: `DateTime`
+
 - **FishingReport**
     - Id: `Guid` (Primary Key)
     - AccountId: `Guid` (Foreign Key)
@@ -97,24 +107,6 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime`
 
-- **Gear**
-    - Id: `Guid` (Primary Key)
-    - AccountId: `Guid` (Foreign Key)
-    - Type: `GearType` (enum: Rod, Reel, Line, Lure, Tackle, Vessel)
-    - Name: `string` (Required, MaxLength: 200)
-    - Brand: `string` (MaxLength: 100)
-    - Model: `string` (MaxLength: 100)
-    - Description: `string` (MaxLength: 1000)
-    - PurchaseDate: `DateTime?`
-    - PurchasePrice: `decimal?`
-    - Condition: `string` (MaxLength: 50)
-    - LastMaintenanceDate: `DateTime?`
-    - NextMaintenanceDate: `DateTime?`
-    - IsActive: `bool` (Default: true)
-    - CreatedDate: `DateTime`
-    - DeletedDate: `DateTime?`
-    - UpdatedDate: `DateTime`
-
 - **FishingPlan**
     - Id: `Guid` (Primary Key)
     - AccountId: `Guid` (Foreign Key)
@@ -130,10 +122,10 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime`
 
-- **ReportGear** (Mapping Table)
+- **ReportTackle** (Mapping Table)
     - Id: `Guid` (Primary Key)
     - FishingReportId: `Guid` (Foreign Key)
-    - GearId: `Guid` (Foreign Key)
+    - TackleId: `Guid` (Foreign Key)
     - CreatedDate: `DateTime`
 
 # User Flows
