@@ -10,7 +10,8 @@
       "Bash(dotnet ef migrations:*)",
       "Bash(dotnet build:*)",
       "Bash(dotnet clean:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

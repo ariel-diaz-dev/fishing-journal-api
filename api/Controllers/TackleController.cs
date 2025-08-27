@@ -1,14 +1,13 @@
-using System.Security.Claims;
+using api.Attributes;
 using Domain.DTOs.Tackle;
 using Domain.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize]
+[RequireAccount]
 public class TackleController : ControllerBase
 {
     private readonly ITackleService _tackleService;
@@ -18,20 +17,15 @@ public class TackleController : ControllerBase
         _tackleService = tackleService;
     }
 
-    private Guid GetAccountIdFromToken()
+    private Guid GetAccountIdFromHttpContext()
     {
-        var accountIdClaim = User.FindFirst("accountId")?.Value;
-        if (accountIdClaim == null || !Guid.TryParse(accountIdClaim, out var accountId))
-        {
-            throw new UnauthorizedAccessException("Invalid token");
-        }
-        return accountId;
+        return (Guid)HttpContext.Items["AccountId"]!;
     }
 
     [HttpGet]
     public async Task<IActionResult> GetAllTackle(CancellationToken cancellationToken = default)
     {
-        var accountId = GetAccountIdFromToken();
+        var accountId = GetAccountIdFromHttpContext();
         var tackle = await _tackleService.GetAllTackleByAccountAsync(accountId, cancellationToken);
         
         var tackleDtos = tackle.Select(t => new TackleDto
@@ -52,7 +46,7 @@ public class TackleController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetTackleById(Guid id, CancellationToken cancellationToken = default)
     {
-        var accountId = GetAccountIdFromToken();
+        var accountId = GetAccountIdFromHttpContext();
         var tackle = await _tackleService.GetTackleByIdAsync(id, accountId, cancellationToken);
         
         if (tackle == null)
@@ -83,7 +77,7 @@ public class TackleController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var accountId = GetAccountIdFromToken();
+        var accountId = GetAccountIdFromHttpContext();
         
         try
         {
@@ -117,7 +111,7 @@ public class TackleController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        var accountId = GetAccountIdFromToken();
+        var accountId = GetAccountIdFromHttpContext();
         var tackle = await _tackleService.UpdateTackleAsync(id, accountId, updateTackleDto, cancellationToken);
         
         if (tackle == null)
@@ -143,7 +137,7 @@ public class TackleController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTackle(Guid id, CancellationToken cancellationToken = default)
     {
-        var accountId = GetAccountIdFromToken();
+        var accountId = GetAccountIdFromHttpContext();
         var result = await _tackleService.DeleteTackleAsync(id, accountId, cancellationToken);
         
         if (!result)
