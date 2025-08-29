@@ -13,7 +13,10 @@
       "Bash(taskkill:*)",
       "Bash(curl:*)",
       "Bash(dotnet test:*)",
-      "Bash(dotnet run:*)"
+      "Bash(dotnet run:*)",
+      "Bash(dotnet ef database update:*)",
+      "Bash(for i in {1..8})",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

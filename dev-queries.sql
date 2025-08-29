@@ -7,5 +7,25 @@ SELECT TOP (1000) [Id]
       ,[UpdatedDate]
   FROM [FishingJournalDb].[dbo].[Accounts];
 
+SELECT TOP (1000) [Id]
+      ,[AccountId]
+      ,[LocationId]
+      ,[ArrivalTime]
+      ,[DepartureTime]
+      ,[FirstHighTide]
+      ,[SecondHighTide]
+      ,[FirstLowTide]
+      ,[SecondLowTide]
+      ,[DaytimeTemperature]
+      ,[WaterTemperature]
+      ,[WindSpeedInMilesPerHour]
+      ,[WindDirection]
+      ,[WeatherConditions]
+      ,[Notes]
+      ,[TripDate]
+      ,[CreatedDate]
+      ,[DeletedDate]
+      ,[UpdatedDate]
+  FROM [FishingJournalDb].[dbo].[FishingReports];
 
 --  UPDATE [dbo].[Accounts] SET DeletedDate = NULL;

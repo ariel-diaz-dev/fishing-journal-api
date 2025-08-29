@@ -98,4 +98,3 @@
     - FishingReportId: `Guid` (Foreign Key)
     - TackleId: `Guid` (Foreign Key)
     - CreatedDate: `DateTime`
-

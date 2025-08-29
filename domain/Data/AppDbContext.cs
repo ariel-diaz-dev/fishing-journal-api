@@ -1,4 +1,5 @@
 using Domain.Models;
+using Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Domain.Data;
@@ -11,6 +12,7 @@ public class AppDbContext : DbContext
     public DbSet<Tackle> Tackle { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<FishSpecies> FishSpecies { get; set; }
+    public DbSet<FishingReport> FishingReports { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -368,6 +370,53 @@ public class AppDbContext : DbContext
                 }
             );
         });
+
+        modelBuilder.Entity<FishingReport>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.AccountId)
+                .IsRequired();
+            
+            entity.Property(e => e.LocationId)
+                .IsRequired();
+            
+            entity.Property(e => e.WindDirection)
+                .HasMaxLength(10);
+            
+            entity.Property(e => e.WeatherConditions)
+                .HasConversion<string>();
+            
+            entity.Property(e => e.Notes)
+                .HasMaxLength(2000);
+            
+            entity.Property(e => e.DaytimeTemperature)
+                .HasPrecision(5, 2);
+            
+            entity.Property(e => e.WaterTemperature)
+                .HasPrecision(5, 2);
+            
+            entity.Property(e => e.CreatedDate)
+                .IsRequired();
+
+            entity.HasQueryFilter(e => e.DeletedDate == null);
+
+            entity.HasIndex(e => e.AccountId);
+            entity.HasIndex(e => e.LocationId);
+            entity.HasIndex(e => e.TripDate);
+            entity.HasIndex(e => e.DeletedDate);
+
+            entity.HasOne(e => e.Account)
+                .WithMany()
+                .HasForeignKey(e => e.AccountId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.Location)
+                .WithMany()
+                .HasForeignKey(e => e.LocationId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -416,6 +465,18 @@ public class AppDbContext : DbContext
             {
                 entry.Entity.CreatedDate = DateTime.UtcNow;
             }
+        }
+
+        var fishingReportEntries = ChangeTracker.Entries<FishingReport>()
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+        foreach (var entry in fishingReportEntries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedDate = DateTime.UtcNow;
+            }
+            entry.Entity.UpdatedDate = DateTime.UtcNow;
         }
 
         return await base.SaveChangesAsync(cancellationToken);
