@@ -12,7 +12,8 @@
       "Bash(dotnet clean:*)",
       "Bash(taskkill:*)",
       "Bash(curl:*)",
-      "Bash(dotnet test:*)"
+      "Bash(dotnet test:*)",
+      "Bash(dotnet run:*)"
     ],
     "deny": [],
     "ask": []

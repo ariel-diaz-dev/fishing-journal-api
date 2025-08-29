@@ -38,14 +38,12 @@
     - UpdatedDate: `DateTime`
 
 - **Location**
-    - Id: `Guid` (Primary Key)
+    - Id: `Int` (Primary Key)
     - Name: `string` (Required, MaxLength: 200)
     - Latitude: `decimal`
     - Longitude: `decimal`
     - Description: `string` (MaxLength: 1000)
     - CreatedDate: `DateTime`
-    - DeletedDate: `DateTime?`
-    - UpdatedDate: `DateTime`
 
 - **FishSpecies**
     - Id: `Guid` (Primary Key)
