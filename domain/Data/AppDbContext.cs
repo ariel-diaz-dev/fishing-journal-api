@@ -10,6 +10,7 @@ public class AppDbContext : DbContext
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Tackle> Tackle { get; set; }
     public DbSet<Location> Locations { get; set; }
+    public DbSet<FishSpecies> FishSpecies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -156,6 +157,217 @@ public class AppDbContext : DbContext
                 }
             );
         });
+
+        modelBuilder.Entity<FishSpecies>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.Order)
+                .IsRequired();
+            
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+            
+            entity.Property(e => e.ScientificName)
+                .HasMaxLength(150);
+            
+            entity.Property(e => e.Description)
+                .HasMaxLength(1000);
+            
+            entity.Property(e => e.CreatedDate)
+                .IsRequired();
+
+            entity.HasIndex(e => e.Name);
+            entity.HasIndex(e => e.Order);
+
+            // Seed data with South Florida inshore fish species (ordered by desirability/popularity)
+            var createdDate = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            
+            entity.HasData(
+                new FishSpecies
+                {
+                    Id = 1,
+                    Order = 1,
+                    Name = "Common Snook",
+                    ScientificName = "Centropomus undecimalis",
+                    Description = "Highly prized gamefish with distinctive black lateral line. Found in mangroves, inlets, and shallow flats. Slot limit 28-33 inches.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 2,
+                    Order = 2,
+                    Name = "Tarpon",
+                    ScientificName = "Megalops atlanticus",
+                    Description = "The 'Silver King' - massive gamefish known for spectacular jumps. Catch and release only. Found in channels, flats, and backcountry.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 3,
+                    Order = 3,
+                    Name = "Redfish (Red Drum)",
+                    ScientificName = "Sciaenops ocellatus",
+                    Description = "Copper-bronze fish with distinctive black spots. Excellent table fare and strong fighter. Found on flats and in shallow water.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 4,
+                    Order = 4,
+                    Name = "Spotted Seatrout",
+                    ScientificName = "Cynoscion nebulosus",
+                    Description = "Popular inshore gamefish with dark spots. Excellent eating and fun to catch. Found over grass flats and shallow waters.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 5,
+                    Order = 5,
+                    Name = "Bonefish",
+                    ScientificName = "Albula vulpes",
+                    Description = "The 'Gray Ghost' of the flats. Extremely wary and challenging to catch. Primarily found on shallow sandy flats in the Keys.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 6,
+                    Order = 6,
+                    Name = "Permit",
+                    ScientificName = "Trachinotus falcatus",
+                    Description = "Elite gamefish of the flats. Difficult to hook and strong fighter. Found on sandy flats and around wrecks in the Keys.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 7,
+                    Order = 7,
+                    Name = "Mangrove Snapper",
+                    ScientificName = "Lutjanus griseus",
+                    Description = "Excellent table fare found around mangroves and structure. Gray to reddish coloration with two canine teeth.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 8,
+                    Order = 8,
+                    Name = "Jack Crevalle",
+                    ScientificName = "Caranx hippos",
+                    Description = "Aggressive predator and strong fighter. Bronze to yellow coloration. Found in schools throughout South Florida waters.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 9,
+                    Order = 9,
+                    Name = "Barracuda",
+                    ScientificName = "Sphyraena barracuda",
+                    Description = "Fierce predator with razor-sharp teeth. Excellent for catching on artificial lures. Found around reefs and flats.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 10,
+                    Order = 10,
+                    Name = "Sheepshead",
+                    ScientificName = "Archosargus probatocephalus",
+                    Description = "Black and white striped fish with human-like teeth. Excellent table fare. Found around structure, docks, and bridges.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 11,
+                    Order = 11,
+                    Name = "Black Drum",
+                    ScientificName = "Pogonias cromis",
+                    Description = "Large bottom-dwelling fish with barbels under chin. Found in shallow waters and around oyster bars.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 12,
+                    Order = 12,
+                    Name = "Flounder",
+                    ScientificName = "Paralichthys albigutta",
+                    Description = "Flatfish that lies on sandy bottoms. Excellent table fare. Both eyes on the same side of head when mature.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 13,
+                    Order = 13,
+                    Name = "Ladyfish",
+                    ScientificName = "Elops saurus",
+                    Description = "Acrobatic fighter that jumps when hooked. Silver coloration. Found in shallow waters and canals throughout South Florida.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 14,
+                    Order = 14,
+                    Name = "Spanish Mackerel",
+                    ScientificName = "Scomberomorus maculatus",
+                    Description = "Fast-swimming fish with yellow spots. Good table fare when fresh. Found in nearshore and inshore waters.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 15,
+                    Order = 15,
+                    Name = "Cobia",
+                    ScientificName = "Rachycentron canadum",
+                    Description = "Large brown fish often mistaken for shark. Excellent eating and strong fighter. Often follows rays and sharks.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 16,
+                    Order = 16,
+                    Name = "Tripletail",
+                    ScientificName = "Lobotes surinamensis",
+                    Description = "Unique fish that floats on its side mimicking debris. Excellent table fare. Found around floating objects and structure.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 17,
+                    Order = 17,
+                    Name = "Pompano",
+                    ScientificName = "Trachinotus carolinus",
+                    Description = "Premium table fare with silvery, laterally compressed body. Found on sandy beaches and flats.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 18,
+                    Order = 18,
+                    Name = "Blue Runner",
+                    ScientificName = "Caranx crysos",
+                    Description = "Small jack species often found in schools. Good live bait for larger fish. Blue-green coloration on top.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 19,
+                    Order = 19,
+                    Name = "Pinfish",
+                    ScientificName = "Lagodon rhomboides",
+                    Description = "Common baitfish with distinctive dark spot. Found around grass beds and structure. Often used as bait for larger fish.",
+                    CreatedDate = createdDate
+                },
+                new FishSpecies
+                {
+                    Id = 20,
+                    Order = 20,
+                    Name = "Grunt",
+                    ScientificName = "Haemulon plumieri",
+                    Description = "Common reef fish that makes grunting sound. Silver with blue and yellow stripes. Found around structure and reefs.",
+                    CreatedDate = createdDate
+                }
+            );
+        });
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -188,6 +400,17 @@ public class AppDbContext : DbContext
             .Where(e => e.State == EntityState.Added);
 
         foreach (var entry in locationEntries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedDate = DateTime.UtcNow;
+            }
+        }
+
+        var fishSpeciesEntries = ChangeTracker.Entries<FishSpecies>()
+            .Where(e => e.State == EntityState.Added);
+
+        foreach (var entry in fishSpeciesEntries)
         {
             if (entry.State == EntityState.Added)
             {

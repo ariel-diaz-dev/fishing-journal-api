@@ -37,8 +37,9 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime`
 
-- **Location**
+- **[DONE] Location**
     - Id: `Int` (Primary Key)
+    - Order: `Int`
     - Name: `string` (Required, MaxLength: 200)
     - Latitude: `decimal`
     - Longitude: `decimal`
@@ -46,16 +47,12 @@
     - CreatedDate: `DateTime`
 
 - **FishSpecies**
-    - Id: `Guid` (Primary Key)
+    - Id: `Int` (Primary Key)
+    - Order: `Int`
     - Name: `string` (Required, MaxLength: 100)
     - ScientificName: `string` (MaxLength: 150)
-    - Family: `string` (MaxLength: 100)
     - Description: `string` (MaxLength: 1000)
-    - AverageLength: `decimal?`
-    - AverageWeight: `decimal?`
     - CreatedDate: `DateTime`
-    - DeletedDate: `DateTime?`
-    - UpdatedDate: `DateTime`
 
 - **FishingReport**
     - Id: `Guid` (Primary Key)

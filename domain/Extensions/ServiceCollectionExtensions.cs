@@ -20,11 +20,13 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAccountRepository, AccountRepository>();
         services.AddScoped<ITackleRepository, TackleRepository>();
         services.AddScoped<ILocationRepository, LocationRepository>();
+        services.AddScoped<IFishSpeciesRepository, FishSpeciesRepository>();
         
         // Register services
         services.AddScoped<IAccountService, AccountService>();
         services.AddScoped<ITackleService, TackleService>();
         services.AddScoped<ILocationService, LocationService>();
+        services.AddScoped<IFishSpeciesService, FishSpeciesService>();
         services.AddScoped<IJwtService, JwtService>();
 
         return services;
