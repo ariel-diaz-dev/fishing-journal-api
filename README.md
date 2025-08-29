@@ -46,7 +46,7 @@
     - Description: `string` (MaxLength: 1000)
     - CreatedDate: `DateTime`
 
-- **FishSpecies**
+- **[DONE] FishSpecies**
     - Id: `Int` (Primary Key)
     - Order: `Int`
     - Name: `string` (Required, MaxLength: 100)
@@ -57,40 +57,41 @@
 - **FishingReport**
     - Id: `Guid` (Primary Key)
     - AccountId: `Guid` (Foreign Key)
-    - LocationId: `Guid` (Foreign Key)
-    - EstimatedArrivalTime: `DateTime?`
-    - ActualArrivalTime: `DateTime?`
-    - ActualDepartureTime: `DateTime?`
+    - LocationId: `Int` (Foreign Key)
+    - ArrivalTime: `DateTime?`
+    - DepartureTime: `DateTime?`
     - FirstHighTide: `DateTime?`
     - SecondHighTide: `DateTime?`
     - FirstLowTide: `DateTime?`
     - SecondLowTide: `DateTime?`
     - DaytimeTemperature: `decimal?`
     - WaterTemperature: `decimal?`
-    - Visibility: `string` (MaxLength: 100)
-    - WindSpeed: `decimal?`
-    - WindDirection: `string` (MaxLength: 10)
-    - WeatherConditions: `string` (MaxLength: 500)
-    - Notes: `string` (MaxLength: 2000)
-    - IsPublic: `bool` (Default: false)
-    - EventDate: `DateTime`
+    - WindSpeedInMilesPerHour: `Int?`
+    - WindDirection: `string?` (MaxLength: 10)
+    - WeatherConditions: (enum: Windy, Cloudy, Sunny, Hot, Very Hot, Cold, Very Cold, Rainy, Windy, Foggy, Other)
+    - Notes: `string?` (MaxLength: 2000)
+    - TripDate: `DateTime?`
     - CreatedDate: `DateTime`
     - DeletedDate: `DateTime?`
-    - UpdatedDate: `DateTime`
+    - UpdatedDate: `DateTime?`
 
 - **Catches** (Mapping Table)
     - Id: `Guid` (Primary Key)
-    - FishSpeciesId: `Guid` (Foreign Key)
+    - FishSpeciesId: `Int` (Foreign Key)
     - FishingReportId: `Guid` (Foreign Key)
     - AccountId: `Guid` (Foreign Key)
-    - Length: `decimal?`
-    - Weight: `decimal?`
-    - LureUsed: `string` (MaxLength: 200)
+    - LengthInInches: `decimal?`
+    - WeightInPounds: `decimal?`
+    - LureUsed: `Guid` (Foreign Key for TackleId)
+    - RodUsed: `Guid` (Foreign Key for TackleId)
+    - ReelUsed: `Guid` (Foreign Key for TackleId)
+    - MainLineTestInPounds: `Int?`
+    - LeaderLineTestInPounds: `Int?`
     - TimeOfCatch: `DateTime?`
     - Released: `bool` (Default: true)
     - CreatedDate: `DateTime`
     - DeletedDate: `DateTime?`
-    - UpdatedDate: `DateTime`
+    - UpdatedDate: `DateTime?`
 
 - **ReportTackle** (Mapping Table)
     - Id: `Guid` (Primary Key)
