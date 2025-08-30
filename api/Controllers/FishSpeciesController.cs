@@ -1,3 +1,4 @@
+using Domain.DTOs.Common;
 using Domain.DTOs.FishSpecies;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -16,11 +17,11 @@ public class FishSpeciesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<FishSpeciesDto>>> GetAllFishSpecies(CancellationToken cancellationToken)
+    public async Task<ActionResult<PaginatedResponse<FishSpeciesDto>>> GetAllFishSpecies([FromQuery] int? limit, [FromQuery] string? next, CancellationToken cancellationToken)
     {
-        var fishSpecies = await _fishSpeciesService.GetAllFishSpeciesAsync(cancellationToken);
+        var paginatedFishSpecies = await _fishSpeciesService.GetAllFishSpeciesPaginatedAsync(limit ?? 25, next, cancellationToken);
         
-        var fishSpeciesDtos = fishSpecies.Select(fs => new FishSpeciesDto
+        var fishSpeciesDtos = paginatedFishSpecies.Data.Select(fs => new FishSpeciesDto
         {
             Id = fs.Id,
             Order = fs.Order,
@@ -30,6 +31,15 @@ public class FishSpeciesController : ControllerBase
             CreatedDate = fs.CreatedDate
         });
 
-        return Ok(fishSpeciesDtos);
+        var response = new PaginatedResponse<FishSpeciesDto>
+        {
+            Data = fishSpeciesDtos,
+            NextCursor = paginatedFishSpecies.NextCursor,
+            HasMore = paginatedFishSpecies.HasMore,
+            Count = paginatedFishSpecies.Count,
+            Limit = paginatedFishSpecies.Limit
+        };
+
+        return Ok(response);
     }
 }

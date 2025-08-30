@@ -1,3 +1,4 @@
+using Domain.DTOs.Common;
 using Domain.DTOs.Tackle;
 using Domain.Interfaces;
 using Domain.Models;
@@ -27,9 +28,14 @@ public class TackleService : ITackleService
         return tackle;
     }
 
-    public async Task<IEnumerable<Tackle>> GetAllTackleByAccountAsync(Guid accountId, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponse<Tackle>> GetAllTackleByAccountAsync(Guid accountId, CancellationToken cancellationToken = default)
     {
-        return await _tackleRepository.GetAllByAccountIdAsync(accountId, cancellationToken);
+        return await _tackleRepository.GetAllByAccountIdPaginatedAsync(accountId, 25, null, cancellationToken);
+    }
+
+    public async Task<PaginatedResponse<Tackle>> GetAllTackleByAccountPaginatedAsync(Guid accountId, int limit = 25, string? cursor = null, CancellationToken cancellationToken = default)
+    {
+        return await _tackleRepository.GetAllByAccountIdPaginatedAsync(accountId, limit, cursor, cancellationToken);
     }
 
     public async Task<Tackle> CreateTackleAsync(Guid accountId, CreateTackleDto createTackleDto, CancellationToken cancellationToken = default)

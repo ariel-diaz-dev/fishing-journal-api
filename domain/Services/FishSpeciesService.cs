@@ -1,3 +1,4 @@
+using Domain.DTOs.Common;
 using Domain.Interfaces;
 using Domain.Models;
 
@@ -12,8 +13,13 @@ public class FishSpeciesService : IFishSpeciesService
         _fishSpeciesRepository = fishSpeciesRepository;
     }
 
-    public async Task<IEnumerable<FishSpecies>> GetAllFishSpeciesAsync(CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponse<FishSpecies>> GetAllFishSpeciesAsync(CancellationToken cancellationToken = default)
     {
-        return await _fishSpeciesRepository.GetAllFishSpeciesAsync(cancellationToken);
+        return await _fishSpeciesRepository.GetAllFishSpeciesPaginatedAsync(25, null, cancellationToken);
+    }
+
+    public async Task<PaginatedResponse<FishSpecies>> GetAllFishSpeciesPaginatedAsync(int limit = 25, string? cursor = null, CancellationToken cancellationToken = default)
+    {
+        return await _fishSpeciesRepository.GetAllFishSpeciesPaginatedAsync(limit, cursor, cancellationToken);
     }
 }

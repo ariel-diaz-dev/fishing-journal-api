@@ -29,10 +29,9 @@ public class FishingReportService : IFishingReportService
         return MapToDto(fishingReport);
     }
 
-    public async Task<IEnumerable<FishingReportDto>> GetFishingReportsByAccountIdAsync(Guid accountId, CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponse<FishingReportDto>> GetFishingReportsByAccountIdAsync(Guid accountId, CancellationToken cancellationToken = default)
     {
-        var fishingReports = await _fishingReportRepository.GetByAccountIdAsync(accountId, cancellationToken);
-        return fishingReports.Select(MapToDto);
+        return await GetFishingReportsByAccountIdPaginatedAsync(accountId, 25, null, cancellationToken);
     }
 
     public async Task<PaginatedResponse<FishingReportDto>> GetFishingReportsByAccountIdPaginatedAsync(Guid accountId, int limit = 25, string? cursor = null, CancellationToken cancellationToken = default)
@@ -44,7 +43,8 @@ public class FishingReportService : IFishingReportService
             Data = paginatedReports.Data.Select(MapToDto),
             NextCursor = paginatedReports.NextCursor,
             HasMore = paginatedReports.HasMore,
-            Count = paginatedReports.Count
+            Count = paginatedReports.Count,
+            Limit = limit
         };
     }
 

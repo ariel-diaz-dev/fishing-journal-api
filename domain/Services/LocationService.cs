@@ -1,3 +1,4 @@
+using Domain.DTOs.Common;
 using Domain.Interfaces;
 using Domain.Models;
 
@@ -12,8 +13,13 @@ public class LocationService : ILocationService
         _locationRepository = locationRepository;
     }
 
-    public async Task<IEnumerable<Location>> GetAllLocationsAsync(CancellationToken cancellationToken = default)
+    public async Task<PaginatedResponse<Location>> GetAllLocationsAsync(CancellationToken cancellationToken = default)
     {
-        return await _locationRepository.GetAllLocationsAsync(cancellationToken);
+        return await _locationRepository.GetAllLocationsPaginatedAsync(25, null, cancellationToken);
+    }
+
+    public async Task<PaginatedResponse<Location>> GetAllLocationsPaginatedAsync(int limit = 25, string? cursor = null, CancellationToken cancellationToken = default)
+    {
+        return await _locationRepository.GetAllLocationsPaginatedAsync(limit, cursor, cancellationToken);
     }
 }

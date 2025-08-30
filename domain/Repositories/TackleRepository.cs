@@ -1,4 +1,5 @@
 using Domain.Data;
+using Domain.DTOs.Common;
 using Domain.Interfaces;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,52 @@ public class TackleRepository : ITackleRepository
             .Where(t => t.AccountId == accountId)
             .OrderBy(t => t.Name)
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task<PaginatedResponse<Tackle>> GetAllByAccountIdPaginatedAsync(Guid accountId, int limit = 25, string? cursor = null, CancellationToken cancellationToken = default)
+    {
+        var query = _context.Tackle
+            .Where(t => t.AccountId == accountId)
+            .OrderBy(t => t.Name)
+            .ThenBy(t => t.Id);
+
+        if (!string.IsNullOrEmpty(cursor))
+        {
+            var cursorParts = cursor.Split('|');
+            if (cursorParts.Length == 2 && 
+                Guid.TryParse(cursorParts[1], out var cursorId))
+            {
+                var cursorName = cursorParts[0];
+                query = query.Where(t => 
+                    string.Compare(t.Name, cursorName) > 0 || 
+                    (t.Name == cursorName && t.Id.CompareTo(cursorId) > 0))
+                    .OrderBy(t => t.Name)
+                    .ThenBy(t => t.Id);
+            }
+        }
+
+        var tackle = await query
+            .Take(limit + 1)
+            .ToListAsync(cancellationToken);
+
+        var hasMore = tackle.Count > limit;
+        var actualTackle = hasMore ? tackle.Take(limit).ToList() : tackle;
+        
+        string? nextCursor = null;
+        if (hasMore && actualTackle.Count > 0)
+        {
+            var lastTackle = actualTackle.Last();
+            nextCursor = $"{lastTackle.Name}|{lastTackle.Id}";
+        }
+
+        return new PaginatedResponse<Tackle>
+        {
+            Data = actualTackle,
+            NextCursor = nextCursor,
+            HasMore = hasMore,
+            Count = actualTackle.Count,
+            Limit = limit
+        };
     }
 
     public async Task<Tackle> AddAsync(Tackle tackle, CancellationToken cancellationToken = default)

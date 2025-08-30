@@ -1,4 +1,5 @@
 using api.Attributes;
+using Domain.DTOs.Common;
 using Domain.DTOs.Tackle;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +20,12 @@ public class TackleController : BaseController
 
 
     [HttpGet]
-    public async Task<IActionResult> GetAllTackle(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetAllTackle([FromQuery] int? limit, [FromQuery] string? next, CancellationToken cancellationToken = default)
     {
         var accountId = AccountId;
-        var tackle = await _tackleService.GetAllTackleByAccountAsync(accountId, cancellationToken);
+        var paginatedTackle = await _tackleService.GetAllTackleByAccountPaginatedAsync(accountId, limit ?? 25, next, cancellationToken);
         
-        var tackleDtos = tackle.Select(t => new TackleDto
+        var tackleDtos = paginatedTackle.Data.Select(t => new TackleDto
         {
             Id = t.Id,
             AccountId = t.AccountId,
@@ -36,7 +37,16 @@ public class TackleController : BaseController
             UpdatedDate = t.UpdatedDate
         });
 
-        return Ok(tackleDtos);
+        var response = new PaginatedResponse<TackleDto>
+        {
+            Data = tackleDtos,
+            NextCursor = paginatedTackle.NextCursor,
+            HasMore = paginatedTackle.HasMore,
+            Count = paginatedTackle.Count,
+            Limit = paginatedTackle.Limit
+        };
+
+        return Ok(response);
     }
 
     [HttpGet("{id}")]

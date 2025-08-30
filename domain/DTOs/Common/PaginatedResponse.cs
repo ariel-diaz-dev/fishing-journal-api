@@ -6,4 +6,5 @@ public class PaginatedResponse<T>
     public string? NextCursor { get; set; }
     public bool HasMore { get; set; }
     public int Count { get; set; }
+    public int Limit { get; set; }
 }

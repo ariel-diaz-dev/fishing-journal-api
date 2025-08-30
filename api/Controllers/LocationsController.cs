@@ -1,4 +1,5 @@
 using api.Attributes;
+using Domain.DTOs.Common;
 using Domain.DTOs.Location;
 using Domain.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -18,11 +19,11 @@ public class LocationsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<LocationDto>>> GetAllLocations(CancellationToken cancellationToken)
+    public async Task<ActionResult<PaginatedResponse<LocationDto>>> GetAllLocations([FromQuery] int? limit, [FromQuery] string? next, CancellationToken cancellationToken)
     {
-        var locations = await _locationService.GetAllLocationsAsync(cancellationToken);
+        var paginatedLocations = await _locationService.GetAllLocationsPaginatedAsync(limit ?? 25, next, cancellationToken);
         
-        var locationDtos = locations.Select(l => new LocationDto
+        var locationDtos = paginatedLocations.Data.Select(l => new LocationDto
         {
             Id = l.Id,
             Name = l.Name,
@@ -33,6 +34,15 @@ public class LocationsController : ControllerBase
             CreatedDate = l.CreatedDate
         });
 
-        return Ok(locationDtos);
+        var response = new PaginatedResponse<LocationDto>
+        {
+            Data = locationDtos,
+            NextCursor = paginatedLocations.NextCursor,
+            HasMore = paginatedLocations.HasMore,
+            Count = paginatedLocations.Count,
+            Limit = paginatedLocations.Limit
+        };
+
+        return Ok(response);
     }
 }

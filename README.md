@@ -54,7 +54,7 @@
     - Description: `string` (MaxLength: 1000)
     - CreatedDate: `DateTime`
 
-- **FishingReport**
+- **[DONE] FishingReport**
     - Id: `Guid` (Primary Key)
     - AccountId: `Guid` (Foreign Key)
     - LocationId: `Int` (Foreign Key)
