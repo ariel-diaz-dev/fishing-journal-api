@@ -1,4 +1,5 @@
 using api.Attributes;
+using api.Controllers;
 using Domain.DTOs.Common;
 using Domain.DTOs.Location;
 using Domain.Interfaces;
@@ -9,7 +10,7 @@ namespace Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [RequireAccountJwt]
-public class LocationsController : ControllerBase
+public class LocationsController : BaseController
 {
     private readonly ILocationService _locationService;
 
@@ -21,6 +22,11 @@ public class LocationsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PaginatedResponse<LocationDto>>> GetAllLocations([FromQuery] int? limit, [FromQuery] string? next, CancellationToken cancellationToken)
     {
+        if (limit.HasValue && limit.Value > MaxLimit)
+        {
+            return BadRequest($"Limit cannot exceed {MaxLimit}");
+        }
+
         var paginatedLocations = await _locationService.GetAllLocationsPaginatedAsync(limit ?? 25, next, cancellationToken);
         
         var locationDtos = paginatedLocations.Data.Select(l => new LocationDto

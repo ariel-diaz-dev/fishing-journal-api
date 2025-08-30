@@ -3,10 +3,35 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers;
 
 /// <summary>
-/// Base controller for controllers that require account-based authorization.
-/// Provides easy access to the authenticated account ID.
+/// Common base controller providing shared functionality for all API controllers.
 /// </summary>
-public abstract class BaseController : ControllerBase
+public abstract class CommonBaseController : ControllerBase
+{
+    /// <summary>
+    /// Maximum allowed limit for pagination requests
+    /// </summary>
+    protected const int MaxLimit = 100;
+
+    /// <summary>
+    /// Validates the limit parameter for pagination requests
+    /// </summary>
+    /// <param name="limit">The limit value to validate</param>
+    /// <returns>BadRequest result if limit exceeds maximum, null if valid</returns>
+    protected IActionResult? ValidateLimit(int? limit)
+    {
+        if (limit.HasValue && limit.Value > MaxLimit)
+        {
+            return BadRequest($"Limit cannot exceed {MaxLimit}");
+        }
+        return null;
+    }
+}
+
+/// <summary>
+/// Base controller for controllers that require account-based authorization.
+/// Provides easy access to the authenticated account ID and common validation methods.
+/// </summary>
+public abstract class BaseController : CommonBaseController
 {
     /// <summary>
     /// Gets the AccountId from HttpContext.Items that was set by the RequireAccountJwt attribute.

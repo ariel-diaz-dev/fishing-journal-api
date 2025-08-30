@@ -1,3 +1,4 @@
+using api.Controllers;
 using Domain.DTOs.Common;
 using Domain.DTOs.FishSpecies;
 using Domain.Interfaces;
@@ -7,7 +8,7 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("api/species")]
-public class FishSpeciesController : ControllerBase
+public class FishSpeciesController : CommonBaseController
 {
     private readonly IFishSpeciesService _fishSpeciesService;
 
@@ -19,6 +20,11 @@ public class FishSpeciesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<PaginatedResponse<FishSpeciesDto>>> GetAllFishSpecies([FromQuery] int? limit, [FromQuery] string? next, CancellationToken cancellationToken)
     {
+        if (limit.HasValue && limit.Value > MaxLimit)
+        {
+            return BadRequest($"Limit cannot exceed {MaxLimit}");
+        }
+
         var paginatedFishSpecies = await _fishSpeciesService.GetAllFishSpeciesPaginatedAsync(limit ?? 25, next, cancellationToken);
         
         var fishSpeciesDtos = paginatedFishSpecies.Data.Select(fs => new FishSpeciesDto

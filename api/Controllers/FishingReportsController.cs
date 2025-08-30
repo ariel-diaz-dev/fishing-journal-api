@@ -21,6 +21,12 @@ public class FishingReportsController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetAllFishingReports([FromQuery] int? limit, [FromQuery] string? next, CancellationToken cancellationToken = default)
     {
+        var validationResult = ValidateLimit(limit);
+        if (validationResult != null)
+        {
+            return validationResult;
+        }
+
         var accountId = AccountId;
         
         if (limit.HasValue || !string.IsNullOrEmpty(next))

@@ -22,6 +22,12 @@ public class TackleController : BaseController
     [HttpGet]
     public async Task<IActionResult> GetAllTackle([FromQuery] int? limit, [FromQuery] string? next, CancellationToken cancellationToken = default)
     {
+        var validationResult = ValidateLimit(limit);
+        if (validationResult != null)
+        {
+            return validationResult;
+        }
+
         var accountId = AccountId;
         var paginatedTackle = await _tackleService.GetAllTackleByAccountPaginatedAsync(accountId, limit ?? 25, next, cancellationToken);
         
