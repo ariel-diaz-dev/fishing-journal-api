@@ -13,6 +13,7 @@ public class AppDbContext : DbContext
     public DbSet<Location> Locations { get; set; }
     public DbSet<FishSpecies> FishSpecies { get; set; }
     public DbSet<FishingReport> FishingReports { get; set; }
+    public DbSet<Landing> Landings { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -417,6 +418,70 @@ public class AppDbContext : DbContext
                 .HasForeignKey(e => e.LocationId)
                 .OnDelete(DeleteBehavior.Restrict);
         });
+
+        modelBuilder.Entity<Landing>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedOnAdd();
+            
+            entity.Property(e => e.AccountId)
+                .IsRequired();
+            
+            entity.Property(e => e.FishSpeciesId)
+                .IsRequired();
+            
+            entity.Property(e => e.FishingReportId)
+                .IsRequired();
+            
+            entity.Property(e => e.LengthInInches)
+                .HasPrecision(5, 2);
+            
+            entity.Property(e => e.Released)
+                .IsRequired()
+                .HasDefaultValue(true);
+            
+            entity.Property(e => e.CreatedDate)
+                .IsRequired();
+
+            entity.HasQueryFilter(e => e.DeletedDate == null);
+
+            entity.HasIndex(e => e.AccountId);
+            entity.HasIndex(e => e.FishSpeciesId);
+            entity.HasIndex(e => e.FishingReportId);
+            entity.HasIndex(e => e.LengthInInches);
+            entity.HasIndex(e => e.TimeOfCatch);
+            entity.HasIndex(e => e.DeletedDate);
+
+            entity.HasOne(e => e.Account)
+                .WithMany()
+                .HasForeignKey(e => e.AccountId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(e => e.FishSpecies)
+                .WithMany()
+                .HasForeignKey(e => e.FishSpeciesId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.FishingReport)
+                .WithMany()
+                .HasForeignKey(e => e.FishingReportId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            entity.HasOne(e => e.Lure)
+                .WithMany()
+                .HasForeignKey(e => e.LureUsed)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            entity.HasOne(e => e.Rod)
+                .WithMany()
+                .HasForeignKey(e => e.RodUsed)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            entity.HasOne(e => e.Reel)
+                .WithMany()
+                .HasForeignKey(e => e.ReelUsed)
+                .OnDelete(DeleteBehavior.NoAction);
+        });
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -471,6 +536,18 @@ public class AppDbContext : DbContext
             .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
 
         foreach (var entry in fishingReportEntries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                entry.Entity.CreatedDate = DateTime.UtcNow;
+            }
+            entry.Entity.UpdatedDate = DateTime.UtcNow;
+        }
+
+        var landingEntries = ChangeTracker.Entries<Landing>()
+            .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+        foreach (var entry in landingEntries)
         {
             if (entry.State == EntityState.Added)
             {

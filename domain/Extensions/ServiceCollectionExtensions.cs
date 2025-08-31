@@ -22,6 +22,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ILocationRepository, LocationRepository>();
         services.AddScoped<IFishSpeciesRepository, FishSpeciesRepository>();
         services.AddScoped<IFishingReportRepository, FishingReportRepository>();
+        services.AddScoped<ILandingRepository, LandingRepository>();
         
         // Register services
         services.AddScoped<IAccountService, AccountService>();
@@ -29,6 +30,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ILocationService, LocationService>();
         services.AddScoped<IFishSpeciesService, FishSpeciesService>();
         services.AddScoped<IFishingReportService, FishingReportService>();
+        services.AddScoped<ILandingService, LandingService>();
         services.AddScoped<IJwtService, JwtService>();
 
         return services;

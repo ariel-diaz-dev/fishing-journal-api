@@ -75,13 +75,12 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime?`
 
-- **Catches** (Mapping Table)
+- **Landings**
     - Id: `Guid` (Primary Key)
+    - AccountId: `Guid` (Foreign Key)
     - FishSpeciesId: `Int` (Foreign Key)
     - FishingReportId: `Guid` (Foreign Key)
-    - AccountId: `Guid` (Foreign Key)
     - LengthInInches: `decimal?`
-    - WeightInPounds: `decimal?`
     - LureUsed: `Guid` (Foreign Key for TackleId)
     - RodUsed: `Guid` (Foreign Key for TackleId)
     - ReelUsed: `Guid` (Foreign Key for TackleId)
@@ -93,7 +92,7 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime?`
 
-- **ReportTackle** (Mapping Table)
+- **ReportTackle**
     - Id: `Guid` (Primary Key)
     - FishingReportId: `Guid` (Foreign Key)
     - TackleId: `Guid` (Foreign Key)
