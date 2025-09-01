@@ -161,5 +161,6 @@ Task<User> CreateUserAsync(string firstName, string lastName, string email, User
 - Always check existing code patterns before implementing new features
 - Prefer editing existing files over creating new ones
 - Follow the established project structure
-- Run `dotnet build` and `dotnet test` after making changes
+- Always run `dotnet build` and `dotnet test` after making any changes
+- Fix any broken unit tests
 - Use existing NuGet packages already referenced in the project
