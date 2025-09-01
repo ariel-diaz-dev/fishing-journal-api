@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.DTOs.Common;
 using Domain.DTOs.Tackle;
 using Domain.Enums;
 using api.Controllers;
@@ -58,19 +59,25 @@ public class TackleControllerTests
 
         var tackleList = new List<Tackle> { tackle1, tackle2 };
 
-        _mockTackleService.Setup(s => s.GetAllTackleByAccountAsync(_accountId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(tackleList);
+        var paginatedResponse = new PaginatedResponse<Tackle>
+        {
+            Data = tackleList,
+            NextCursor = null,
+            HasMore = false,
+            Count = tackleList.Count,
+            Limit = 25
+        };
+        _mockTackleService.Setup(s => s.GetAllTackleByAccountPaginatedAsync(_accountId, 25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllTackle(CancellationToken.None);
+        var result = await _controller.GetAllTackle(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var tackleDtos = Assert.IsAssignableFrom<IEnumerable<TackleDto>>(okResult.Value);
-        var tackleArray = tackleDtos.ToArray();
-        Assert.Equal(2, tackleArray.Length);
-        Assert.Equal(tackle1.Name, tackleArray[0].Name);
-        Assert.Equal(tackle2.Name, tackleArray[1].Name);
+        var responseResult = Assert.IsType<PaginatedResponse<TackleDto>>(okResult.Value);
+        Assert.Equal(2, responseResult.Data.Count());
+        Assert.Equal(tackle1.Name, responseResult.Data.First().Name);
     }
 
     [Fact]

@@ -1,3 +1,4 @@
+using api.Attributes;
 using api.Controllers;
 using Domain.DTOs.Common;
 using Domain.DTOs.FishSpecies;
@@ -8,6 +9,7 @@ namespace Api.Controllers;
 
 [ApiController]
 [Route("api/species")]
+[RequireAccountJwt]
 public class FishSpeciesController : CommonBaseController
 {
     private readonly IFishSpeciesService _fishSpeciesService;

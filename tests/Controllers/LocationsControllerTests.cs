@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.DTOs.Common;
 using Domain.DTOs.Location;
 using Api.Controllers;
 
@@ -58,16 +59,24 @@ public class LocationsControllerTests
 
         var locations = new List<Location> { location1, location2 };
 
-        _mockLocationService.Setup(s => s.GetAllLocationsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(locations);
+        var paginatedResponse = new PaginatedResponse<Location>
+        {
+            Data = locations,
+            NextCursor = null,
+            HasMore = false,
+            Count = locations.Count,
+            Limit = 25
+        };
+        _mockLocationService.Setup(s => s.GetAllLocationsPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllLocations(CancellationToken.None);
+        var result = await _controller.GetAllLocations(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var locationDtos = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(okResult.Value);
-        var locationArray = locationDtos.ToArray();
+        var actualResponse = Assert.IsType<PaginatedResponse<LocationDto>>(okResult.Value);
+        var locationArray = actualResponse.Data.ToArray();
         
         Assert.Equal(2, locationArray.Length);
         Assert.Equal(1, locationArray[0].Id);
@@ -87,28 +96,36 @@ public class LocationsControllerTests
     {
         // Arrange
         var locations = new List<Location>();
-        _mockLocationService.Setup(s => s.GetAllLocationsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(locations);
+        var paginatedResponse = new PaginatedResponse<Location>
+        {
+            Data = locations,
+            NextCursor = null,
+            HasMore = false,
+            Count = locations.Count,
+            Limit = 25
+        };
+        _mockLocationService.Setup(s => s.GetAllLocationsPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllLocations(CancellationToken.None);
+        var result = await _controller.GetAllLocations(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var locationDtos = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(okResult.Value);
-        Assert.Empty(locationDtos);
+        var actualResponse = Assert.IsType<PaginatedResponse<LocationDto>>(okResult.Value);
+        Assert.Empty(actualResponse.Data);
     }
 
     [Fact]
     public async Task GetAllLocations_ServiceThrowsException_ThrowsException()
     {
         // Arrange
-        _mockLocationService.Setup(s => s.GetAllLocationsAsync(It.IsAny<CancellationToken>()))
+        _mockLocationService.Setup(s => s.GetAllLocationsPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Database connection failed"));
 
         // Act & Assert
         await Assert.ThrowsAsync<Exception>(() => 
-            _controller.GetAllLocations(CancellationToken.None));
+            _controller.GetAllLocations(null, null, CancellationToken.None));
     }
 
     [Fact]
@@ -117,14 +134,22 @@ public class LocationsControllerTests
         // Arrange
         var locations = new List<Location>();
         var cancellationToken = CancellationToken.None;
-        _mockLocationService.Setup(s => s.GetAllLocationsAsync(cancellationToken))
-            .ReturnsAsync(locations);
+        var paginatedResponse = new PaginatedResponse<Location>
+        {
+            Data = locations,
+            NextCursor = null,
+            HasMore = false,
+            Count = locations.Count,
+            Limit = 25
+        };
+        _mockLocationService.Setup(s => s.GetAllLocationsPaginatedAsync(25, null, cancellationToken))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        await _controller.GetAllLocations(cancellationToken);
+        await _controller.GetAllLocations(null, null, cancellationToken);
 
         // Assert
-        _mockLocationService.Verify(s => s.GetAllLocationsAsync(cancellationToken), Times.Once);
+        _mockLocationService.Verify(s => s.GetAllLocationsPaginatedAsync(25, null, cancellationToken), Times.Once);
     }
 
     [Fact]
@@ -144,16 +169,24 @@ public class LocationsControllerTests
         };
 
         var locations = new List<Location> { location };
-        _mockLocationService.Setup(s => s.GetAllLocationsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(locations);
+        var paginatedResponse = new PaginatedResponse<Location>
+        {
+            Data = locations,
+            NextCursor = null,
+            HasMore = false,
+            Count = locations.Count,
+            Limit = 25
+        };
+        _mockLocationService.Setup(s => s.GetAllLocationsPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllLocations(CancellationToken.None);
+        var result = await _controller.GetAllLocations(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var locationDtos = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(okResult.Value);
-        var locationDto = locationDtos.First();
+        var actualResponse = Assert.IsType<PaginatedResponse<LocationDto>>(okResult.Value);
+        var locationDto = actualResponse.Data.First();
         
         Assert.Equal(location.Id, locationDto.Id);
         Assert.Equal(location.Name, locationDto.Name);
@@ -180,16 +213,24 @@ public class LocationsControllerTests
         };
 
         var locations = new List<Location> { location };
-        _mockLocationService.Setup(s => s.GetAllLocationsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(locations);
+        var paginatedResponse = new PaginatedResponse<Location>
+        {
+            Data = locations,
+            NextCursor = null,
+            HasMore = false,
+            Count = locations.Count,
+            Limit = 25
+        };
+        _mockLocationService.Setup(s => s.GetAllLocationsPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllLocations(CancellationToken.None);
+        var result = await _controller.GetAllLocations(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var locationDtos = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(okResult.Value);
-        var locationDto = locationDtos.First();
+        var actualResponse = Assert.IsType<PaginatedResponse<LocationDto>>(okResult.Value);
+        var locationDto = actualResponse.Data.First();
         
         Assert.Null(locationDto.Description);
     }
@@ -204,16 +245,24 @@ public class LocationsControllerTests
 
         // Return them in the order that the repository would (ordered by Order field)
         var locations = new List<Location> { location1, location2, location3 };
-        _mockLocationService.Setup(s => s.GetAllLocationsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(locations);
+        var paginatedResponse = new PaginatedResponse<Location>
+        {
+            Data = locations,
+            NextCursor = null,
+            HasMore = false,
+            Count = locations.Count,
+            Limit = 25
+        };
+        _mockLocationService.Setup(s => s.GetAllLocationsPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllLocations(CancellationToken.None);
+        var result = await _controller.GetAllLocations(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var locationDtos = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(okResult.Value);
-        var locationArray = locationDtos.ToArray();
+        var actualResponse = Assert.IsType<PaginatedResponse<LocationDto>>(okResult.Value);
+        var locationArray = actualResponse.Data.ToArray();
         
         Assert.Equal(3, locationArray.Length);
         Assert.Equal(1, locationArray[0].Order);
@@ -239,16 +288,24 @@ public class LocationsControllerTests
         };
 
         var locations = new List<Location> { location };
-        _mockLocationService.Setup(s => s.GetAllLocationsAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(locations);
+        var paginatedResponse = new PaginatedResponse<Location>
+        {
+            Data = locations,
+            NextCursor = null,
+            HasMore = false,
+            Count = locations.Count,
+            Limit = 25
+        };
+        _mockLocationService.Setup(s => s.GetAllLocationsPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllLocations(CancellationToken.None);
+        var result = await _controller.GetAllLocations(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var locationDtos = Assert.IsAssignableFrom<IEnumerable<LocationDto>>(okResult.Value);
-        var locationDto = locationDtos.First();
+        var actualResponse = Assert.IsType<PaginatedResponse<LocationDto>>(okResult.Value);
+        var locationDto = actualResponse.Data.First();
         
         Assert.Equal(25.12345678m, locationDto.Latitude);
         Assert.Equal(-80.98765432m, locationDto.Longitude);

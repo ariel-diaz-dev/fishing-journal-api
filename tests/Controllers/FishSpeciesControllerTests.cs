@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Domain.Interfaces;
 using Domain.Models;
+using Domain.DTOs.Common;
 using Domain.DTOs.FishSpecies;
 using Api.Controllers;
 
@@ -44,16 +45,24 @@ public class FishSpeciesControllerTests
 
         var fishSpecies = new List<FishSpecies> { fishSpecies1, fishSpecies2 };
 
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishSpecies);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpecies,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpecies.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllFishSpecies(CancellationToken.None);
+        var result = await _controller.GetAllFishSpecies(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var fishSpeciesDtos = Assert.IsAssignableFrom<IEnumerable<FishSpeciesDto>>(okResult.Value);
-        var fishSpeciesArray = fishSpeciesDtos.ToArray();
+        var paginatedResponseResult = Assert.IsType<PaginatedResponse<FishSpeciesDto>>(okResult.Value);
+        var fishSpeciesArray = paginatedResponseResult.Data.ToArray();
         
         Assert.Equal(2, fishSpeciesArray.Length);
         Assert.Equal(1, fishSpeciesArray[0].Id);
@@ -73,28 +82,36 @@ public class FishSpeciesControllerTests
     {
         // Arrange
         var fishSpecies = new List<FishSpecies>();
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishSpecies);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpecies,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpecies.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllFishSpecies(CancellationToken.None);
+        var result = await _controller.GetAllFishSpecies(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var fishSpeciesDtos = Assert.IsAssignableFrom<IEnumerable<FishSpeciesDto>>(okResult.Value);
-        Assert.Empty(fishSpeciesDtos);
+        var actualResponse = Assert.IsType<PaginatedResponse<FishSpeciesDto>>(okResult.Value);
+        Assert.Empty(actualResponse.Data);
     }
 
     [Fact]
     public async Task GetAllFishSpecies_ServiceThrowsException_ThrowsException()
     {
         // Arrange
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Database connection failed"));
 
         // Act & Assert
         await Assert.ThrowsAsync<Exception>(() => 
-            _controller.GetAllFishSpecies(CancellationToken.None));
+            _controller.GetAllFishSpecies(null, null, CancellationToken.None));
     }
 
     [Fact]
@@ -103,14 +120,22 @@ public class FishSpeciesControllerTests
         // Arrange
         var fishSpecies = new List<FishSpecies>();
         var cancellationToken = CancellationToken.None;
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(cancellationToken))
-            .ReturnsAsync(fishSpecies);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpecies,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpecies.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, cancellationToken))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        await _controller.GetAllFishSpecies(cancellationToken);
+        await _controller.GetAllFishSpecies(null, null, cancellationToken);
 
         // Assert
-        _mockFishSpeciesService.Verify(s => s.GetAllFishSpeciesAsync(cancellationToken), Times.Once);
+        _mockFishSpeciesService.Verify(s => s.GetAllFishSpeciesPaginatedAsync(25, null, cancellationToken), Times.Once);
     }
 
     [Fact]
@@ -129,16 +154,24 @@ public class FishSpeciesControllerTests
         };
 
         var fishSpeciesList = new List<FishSpecies> { fishSpecies };
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishSpeciesList);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpeciesList,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpeciesList.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllFishSpecies(CancellationToken.None);
+        var result = await _controller.GetAllFishSpecies(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var fishSpeciesDtos = Assert.IsAssignableFrom<IEnumerable<FishSpeciesDto>>(okResult.Value);
-        var fishSpeciesDto = fishSpeciesDtos.First();
+        var actualResponse = Assert.IsType<PaginatedResponse<FishSpeciesDto>>(okResult.Value);
+        var fishSpeciesDto = actualResponse.Data.First();
         
         Assert.Equal(fishSpecies.Id, fishSpeciesDto.Id);
         Assert.Equal(fishSpecies.Order, fishSpeciesDto.Order);
@@ -163,16 +196,24 @@ public class FishSpeciesControllerTests
         };
 
         var fishSpeciesList = new List<FishSpecies> { fishSpecies };
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishSpeciesList);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpeciesList,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpeciesList.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllFishSpecies(CancellationToken.None);
+        var result = await _controller.GetAllFishSpecies(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var fishSpeciesDtos = Assert.IsAssignableFrom<IEnumerable<FishSpeciesDto>>(okResult.Value);
-        var fishSpeciesDto = fishSpeciesDtos.First();
+        var actualResponse = Assert.IsType<PaginatedResponse<FishSpeciesDto>>(okResult.Value);
+        var fishSpeciesDto = actualResponse.Data.First();
         
         Assert.Null(fishSpeciesDto.ScientificName);
     }
@@ -192,16 +233,24 @@ public class FishSpeciesControllerTests
         };
 
         var fishSpeciesList = new List<FishSpecies> { fishSpecies };
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishSpeciesList);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpeciesList,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpeciesList.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllFishSpecies(CancellationToken.None);
+        var result = await _controller.GetAllFishSpecies(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var fishSpeciesDtos = Assert.IsAssignableFrom<IEnumerable<FishSpeciesDto>>(okResult.Value);
-        var fishSpeciesDto = fishSpeciesDtos.First();
+        var actualResponse = Assert.IsType<PaginatedResponse<FishSpeciesDto>>(okResult.Value);
+        var fishSpeciesDto = actualResponse.Data.First();
         
         Assert.Null(fishSpeciesDto.Description);
     }
@@ -216,16 +265,24 @@ public class FishSpeciesControllerTests
 
         // Return them in the order that the repository would (ordered by Order field)
         var fishSpeciesList = new List<FishSpecies> { fishSpecies1, fishSpecies2, fishSpecies3 };
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishSpeciesList);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpeciesList,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpeciesList.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllFishSpecies(CancellationToken.None);
+        var result = await _controller.GetAllFishSpecies(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var fishSpeciesDtos = Assert.IsAssignableFrom<IEnumerable<FishSpeciesDto>>(okResult.Value);
-        var fishSpeciesArray = fishSpeciesDtos.ToArray();
+        var actualResponse = Assert.IsType<PaginatedResponse<FishSpeciesDto>>(okResult.Value);
+        var fishSpeciesArray = actualResponse.Data.ToArray();
         
         Assert.Equal(3, fishSpeciesArray.Length);
         Assert.Equal(1, fishSpeciesArray[0].Order);
@@ -252,16 +309,24 @@ public class FishSpeciesControllerTests
         };
 
         var fishSpeciesList = new List<FishSpecies> { fishSpecies };
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishSpeciesList);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpeciesList,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpeciesList.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllFishSpecies(CancellationToken.None);
+        var result = await _controller.GetAllFishSpecies(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var fishSpeciesDtos = Assert.IsAssignableFrom<IEnumerable<FishSpeciesDto>>(okResult.Value);
-        var fishSpeciesDto = fishSpeciesDtos.First();
+        var actualResponse = Assert.IsType<PaginatedResponse<FishSpeciesDto>>(okResult.Value);
+        var fishSpeciesDto = actualResponse.Data.First();
         
         Assert.Equal(longDescription, fishSpeciesDto.Description);
         Assert.Equal(1000, fishSpeciesDto.Description?.Length);
@@ -282,16 +347,24 @@ public class FishSpeciesControllerTests
         };
 
         var fishSpeciesList = new List<FishSpecies> { fishSpecies };
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishSpeciesList);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpeciesList,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpeciesList.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllFishSpecies(CancellationToken.None);
+        var result = await _controller.GetAllFishSpecies(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var fishSpeciesDtos = Assert.IsAssignableFrom<IEnumerable<FishSpeciesDto>>(okResult.Value);
-        var fishSpeciesDto = fishSpeciesDtos.First();
+        var actualResponse = Assert.IsType<PaginatedResponse<FishSpeciesDto>>(okResult.Value);
+        var fishSpeciesDto = actualResponse.Data.First();
         
         Assert.Equal("Fish (Common Name)", fishSpeciesDto.Name);
         Assert.Equal("Species name-with-hyphens", fishSpeciesDto.ScientificName);
@@ -326,16 +399,24 @@ public class FishSpeciesControllerTests
         };
 
         var fishSpeciesList = new List<FishSpecies> { fishSpecies1, fishSpecies2 };
-        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishSpeciesList);
+        var paginatedResponse = new PaginatedResponse<FishSpecies>
+        {
+            Data = fishSpeciesList,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishSpeciesList.Count,
+            Limit = 25
+        };
+        _mockFishSpeciesService.Setup(s => s.GetAllFishSpeciesPaginatedAsync(25, null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginatedResponse);
 
         // Act
-        var result = await _controller.GetAllFishSpecies(CancellationToken.None);
+        var result = await _controller.GetAllFishSpecies(null, null, CancellationToken.None);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result.Result);
-        var fishSpeciesDtos = Assert.IsAssignableFrom<IEnumerable<FishSpeciesDto>>(okResult.Value);
-        var fishSpeciesArray = fishSpeciesDtos.ToArray();
+        var actualResponse = Assert.IsType<PaginatedResponse<FishSpeciesDto>>(okResult.Value);
+        var fishSpeciesArray = actualResponse.Data.ToArray();
         
         // Verify first fish species
         Assert.Equal(1, fishSpeciesArray[0].Id);

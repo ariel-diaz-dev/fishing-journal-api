@@ -43,18 +43,17 @@ public class LandingsControllerTests
             new LandingDto { Id = Guid.NewGuid(), AccountId = _testAccountId, FishingReportId = _testFishingReportId, FishSpeciesId = 1 },
             new LandingDto { Id = Guid.NewGuid(), AccountId = _testAccountId, FishingReportId = _testFishingReportId, FishSpeciesId = 2 }
         };
-        
+
         var paginatedResponse = new PaginatedResponse<LandingDto>
         {
             Data = landings,
-            Count = 2,
-            HasMore = false,
             NextCursor = null,
+            HasMore = false,
+            Count = landings.Count,
             Limit = 25
         };
-
         _mockLandingService
-            .Setup(s => s.GetLandingsByFishingReportIdPaginatedAsync(_testFishingReportId, _testAccountId, 25, null, It.IsAny<CancellationToken>()))
+            .Setup(s => s.GetLandingsByFishingReportIdAsync(_testFishingReportId, _testAccountId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginatedResponse);
 
         // Act
@@ -63,7 +62,7 @@ public class LandingsControllerTests
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
         var returnedResponse = Assert.IsType<PaginatedResponse<LandingDto>>(okResult.Value);
-        Assert.Equal(2, returnedResponse.Count);
+        Assert.Equal(2, returnedResponse.Data.Count());
     }
 
     [Fact]

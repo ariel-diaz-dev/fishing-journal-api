@@ -43,17 +43,25 @@ public class FishingReportsControllerTests
             new FishingReportDto { Id = Guid.NewGuid(), AccountId = _testAccountId },
             new FishingReportDto { Id = Guid.NewGuid(), AccountId = _testAccountId }
         };
+        var paginatedResponse = new PaginatedResponse<FishingReportDto>
+        {
+            Data = fishingReports,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishingReports.Count,
+            Limit = 25
+        };
         _mockFishingReportService
             .Setup(s => s.GetFishingReportsByAccountIdAsync(_testAccountId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishingReports);
+            .ReturnsAsync(paginatedResponse);
 
         // Act
         var result = await _controller.GetAllFishingReports(null, null);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var returnedReports = Assert.IsAssignableFrom<IEnumerable<FishingReportDto>>(okResult.Value);
-        Assert.Equal(2, returnedReports.Count());
+        var returnedResponse = Assert.IsType<PaginatedResponse<FishingReportDto>>(okResult.Value);
+        Assert.Equal(2, returnedResponse.Data.Count());
     }
 
     [Fact]
@@ -343,16 +351,24 @@ public class FishingReportsControllerTests
             new FishingReportDto { Id = Guid.NewGuid(), AccountId = _testAccountId },
             new FishingReportDto { Id = Guid.NewGuid(), AccountId = _testAccountId }
         };
+        var paginatedResponse = new PaginatedResponse<FishingReportDto>
+        {
+            Data = fishingReports,
+            NextCursor = null,
+            HasMore = false,
+            Count = fishingReports.Count,
+            Limit = 25
+        };
         _mockFishingReportService
             .Setup(s => s.GetFishingReportsByAccountIdAsync(_testAccountId, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(fishingReports);
+            .ReturnsAsync(paginatedResponse);
 
         // Act
         var result = await _controller.GetAllFishingReports(null, null);
 
         // Assert
         var okResult = Assert.IsType<OkObjectResult>(result);
-        var returnedReports = Assert.IsAssignableFrom<IEnumerable<FishingReportDto>>(okResult.Value);
-        Assert.Equal(2, returnedReports.Count());
+        var returnedResponse = Assert.IsType<PaginatedResponse<FishingReportDto>>(okResult.Value);
+        Assert.Equal(2, returnedResponse.Data.Count());
     }
 }

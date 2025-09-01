@@ -75,7 +75,7 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime?`
 
-- **Landings**
+- **[DONE] Landings**
     - Id: `Guid` (Primary Key)
     - AccountId: `Guid` (Foreign Key)
     - FishSpeciesId: `Int` (Foreign Key)
@@ -91,9 +91,3 @@
     - CreatedDate: `DateTime`
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime?`
-
-- **ReportTackle**
-    - Id: `Guid` (Primary Key)
-    - FishingReportId: `Guid` (Foreign Key)
-    - TackleId: `Guid` (Foreign Key)
-    - CreatedDate: `DateTime`

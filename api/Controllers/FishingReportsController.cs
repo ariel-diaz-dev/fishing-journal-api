@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/reports")]
 [RequireAccountJwt]
 public class FishingReportsController : BaseController
 {
