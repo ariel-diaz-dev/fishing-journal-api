@@ -18,7 +18,7 @@
 - Offline catch log tracking
 
 # Models
-- **[DONE] Account**
+- **Account**
     - Id: `Guid` (Primary Key)
     - Email: `string` (Required, MaxLength: 255)
     - FirstName: `string` (Required, MaxLength: 100)
@@ -27,7 +27,7 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime`
 
-- **[DONE] Tackle**
+- **Tackle**
     - Id: `Guid` (Primary Key)
     - AccountId: `Guid` (Foreign Key)
     - Type: `Type` (Required, enum: Rod, Reel, Line, Lure, Terminal, Vessel, Other)
@@ -37,7 +37,7 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime`
 
-- **[DONE] Location**
+- **Location**
     - Id: `Int` (Primary Key)
     - Order: `Int`
     - Name: `string` (Required, MaxLength: 200)
@@ -46,7 +46,7 @@
     - Description: `string` (MaxLength: 1000)
     - CreatedDate: `DateTime`
 
-- **[DONE] FishSpecies**
+- **FishSpecies**
     - Id: `Int` (Primary Key)
     - Order: `Int`
     - Name: `string` (Required, MaxLength: 100)
@@ -54,7 +54,7 @@
     - Description: `string` (MaxLength: 1000)
     - CreatedDate: `DateTime`
 
-- **[DONE] FishingReport**
+- **FishingReport**
     - Id: `Guid` (Primary Key)
     - AccountId: `Guid` (Foreign Key)
     - LocationId: `Int` (Foreign Key)
@@ -75,7 +75,7 @@
     - DeletedDate: `DateTime?`
     - UpdatedDate: `DateTime?`
 
-- **[DONE] Landings**
+- **Landings**
     - Id: `Guid` (Primary Key)
     - AccountId: `Guid` (Foreign Key)
     - FishSpeciesId: `Int` (Foreign Key)

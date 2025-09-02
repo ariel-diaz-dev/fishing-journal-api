@@ -26,5 +26,8 @@ public record CreateFishingReportDto
     [MaxLength(2000)]
     public string? Notes { get; init; }
     
+    [MaxLength(500)]
+    public string? VideoUrl { get; init; }
+    
     public DateTime? TripDate { get; init; }
 }

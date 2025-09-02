@@ -39,6 +39,9 @@ public class FishingReport
     [MaxLength(2000)]
     public string? Notes { get; set; }
 
+    [MaxLength(500)]
+    public string? VideoUrl { get; set; }
+
     public DateTime? TripDate { get; set; }
 
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;

@@ -20,6 +20,7 @@ public record FishingReportDto
     public string? WindDirection { get; init; }
     public WeatherConditions? WeatherConditions { get; init; }
     public string? Notes { get; init; }
+    public string? VideoUrl { get; init; }
     public DateTime? TripDate { get; init; }
     public DateTime CreatedDate { get; init; }
     public DateTime? UpdatedDate { get; init; }

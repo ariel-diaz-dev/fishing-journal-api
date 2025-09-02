@@ -71,6 +71,7 @@ public class FishingReportService : IFishingReportService
             WindDirection = createFishingReportDto.WindDirection,
             WeatherConditions = createFishingReportDto.WeatherConditions,
             Notes = createFishingReportDto.Notes,
+            VideoUrl = createFishingReportDto.VideoUrl,
             TripDate = createFishingReportDto.TripDate
         };
 
@@ -114,6 +115,8 @@ public class FishingReportService : IFishingReportService
             existingReport.WeatherConditions = updateFishingReportDto.WeatherConditions;
         if (updateFishingReportDto.Notes != null)
             existingReport.Notes = updateFishingReportDto.Notes;
+        if (updateFishingReportDto.VideoUrl != null)
+            existingReport.VideoUrl = updateFishingReportDto.VideoUrl;
         if (updateFishingReportDto.TripDate.HasValue)
             existingReport.TripDate = updateFishingReportDto.TripDate;
 
@@ -154,6 +157,7 @@ public class FishingReportService : IFishingReportService
             WindDirection = fishingReport.WindDirection,
             WeatherConditions = fishingReport.WeatherConditions,
             Notes = fishingReport.Notes,
+            VideoUrl = fishingReport.VideoUrl,
             TripDate = fishingReport.TripDate,
             CreatedDate = fishingReport.CreatedDate,
             UpdatedDate = fishingReport.UpdatedDate,
